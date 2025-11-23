@@ -46,7 +46,11 @@ jobs:
         username: ${{ secrets.VPS_USER }}
         key: ${{ secrets.VPS_SSH_KEY }}
         script: |
-          # Rename the uploaded jar to a standard name
-          mv /home/${{ secrets.VPS_USER }}/app/*.jar /home/${{ secrets.VPS_USER }}/app/realworld-app.jar
+          # Remove old jar if exists
+          rm -f /home/${{ secrets.VPS_USER }}/app/realworld-app.jar
+          # Rename the uploaded jar to a standard name (excluding the plain jar)
+          mv /home/${{ secrets.VPS_USER }}/app/*-SNAPSHOT.jar /home/${{ secrets.VPS_USER }}/app/realworld-app.jar 2>/dev/null || true
+          # Remove the plain jar
+          rm -f /home/${{ secrets.VPS_USER }}/app/*-plain.jar
           # Restart the systemd service
           sudo systemctl restart realworld
