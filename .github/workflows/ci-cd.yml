@@ -29,6 +29,31 @@ jobs:
       run: ./gradlew test
 
     # Deploy to VPS via SCP and SSH
+    - name: Setup Systemd Service
+      uses: appleboy/scp-action@master
+      with:
+        host: ${{ secrets.VPS_HOST }}
+        username: ${{ secrets.VPS_USER }}
+        key: ${{ secrets.VPS_SSH_KEY }}
+        source: "ops/systemd/realworld.service"
+        target: "/tmp/"
+        strip_components: 2
+
+    - name: Install and Enable Service
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.VPS_HOST }}
+        username: ${{ secrets.VPS_USER }}
+        key: ${{ secrets.VPS_SSH_KEY }}
+        script: |
+          # Create app directory
+          mkdir -p /home/${{ secrets.VPS_USER }}/app
+          # Copy service file to systemd
+          sudo cp /tmp/realworld.service /etc/systemd/system/realworld.service
+          # Reload systemd and enable service
+          sudo systemctl daemon-reload
+          sudo systemctl enable realworld
+
     - name: Copy JAR to VPS
       uses: appleboy/scp-action@master
       with:
@@ -46,6 +71,14 @@ jobs:
         username: ${{ secrets.VPS_USER }}
         key: ${{ secrets.VPS_SSH_KEY }}
         script: |
+          # Install Java 17 if not present
+          if ! command -v java &> /dev/null; then
+            echo "Java not found, installing..."
+            sudo apt update
+            sudo apt install -y openjdk-17-jre-headless
+          else
+            echo "Java is already installed: $(java -version 2>&1 | head -n 1)"
+          fi
           # Remove old jar if exists
           rm -f /home/${{ secrets.VPS_USER }}/app/realworld-app.jar
           # Rename the uploaded jar to a standard name (excluding the plain jar)
