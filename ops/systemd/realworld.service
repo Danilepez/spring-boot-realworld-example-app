@@ -4,7 +4,6 @@ After=syslog.target network.target mysql.service
 
 [Service]
 User=ubuntu
-# Change this path to where you upload the jar
 ExecStart=/usr/bin/java -jar /home/ubuntu/app/realworld-app.jar
 SuccessExitStatus=143
 Restart=always
@@ -12,11 +11,10 @@ RestartSec=5
 
 # Environment variables for production
 Environment="SPRING_PROFILES_ACTIVE=mysql"
-Environment="MYSQL_HOST=realworld-db.c54qq8k0wsin.us-east-2.rds.amazonaws.com"
-Environment="MYSQL_USER=admin"
-Environment="MYSQL_PASSWORD=admin123"
-Environment="MYSQL_DATABASE=realworld"
-# Add other secrets here or load from a file
+Environment="MYSQL_HOST=DB_HOST_PLACEHOLDER"
+Environment="MYSQL_USER=DB_USER_PLACEHOLDER"
+Environment="MYSQL_PASSWORD=DB_PASSWORD_PLACEHOLDER"
+Environment="MYSQL_DATABASE=DB_NAME_PLACEHOLDER"
 
 [Install]
 WantedBy=multi-user.target

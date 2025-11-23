@@ -48,6 +48,11 @@ jobs:
         script: |
           # Create app directory
           mkdir -p /home/${{ secrets.VPS_USER }}/app
+          # Replace placeholders in service file with actual values
+          sed -i 's/DB_HOST_PLACEHOLDER/${{ secrets.DB_HOST }}/g' /tmp/realworld.service
+          sed -i 's/DB_USER_PLACEHOLDER/${{ secrets.DB_USER }}/g' /tmp/realworld.service
+          sed -i 's/DB_PASSWORD_PLACEHOLDER/${{ secrets.DB_PASSWORD }}/g' /tmp/realworld.service
+          sed -i 's/DB_NAME_PLACEHOLDER/${{ secrets.DB_NAME }}/g' /tmp/realworld.service
           # Copy service file to systemd
           sudo cp /tmp/realworld.service /etc/systemd/system/realworld.service
           # Reload systemd and enable service
@@ -85,7 +90,7 @@ jobs:
             sudo apt install -y mysql-client
           fi
           # Create database in RDS if it doesn't exist
-          mysql -h realworld-db.c54qq8k0wsin.us-east-2.rds.amazonaws.com -u admin -padmin123 -e "CREATE DATABASE IF NOT EXISTS realworld;" 2>/dev/null || echo "Database already exists or connection failed"
+          mysql -h ${{ secrets.DB_HOST }} -u ${{ secrets.DB_USER }} -p${{ secrets.DB_PASSWORD }} -e "CREATE DATABASE IF NOT EXISTS ${{ secrets.DB_NAME }};" 2>/dev/null || echo "Database already exists or connection failed"
           # Remove old jar if exists
           rm -f /home/${{ secrets.VPS_USER }}/app/realworld-app.jar
           # Rename the uploaded jar to a standard name (excluding the plain jar)
