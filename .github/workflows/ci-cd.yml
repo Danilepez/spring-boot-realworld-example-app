@@ -79,6 +79,13 @@ jobs:
           else
             echo "Java is already installed: $(java -version 2>&1 | head -n 1)"
           fi
+          # Install MySQL client if not present
+          if ! command -v mysql &> /dev/null; then
+            echo "MySQL client not found, installing..."
+            sudo apt install -y mysql-client
+          fi
+          # Create database in RDS if it doesn't exist
+          mysql -h realworld-db.c54qq8k0wsin.us-east-2.rds.amazonaws.com -u admin -padmin123 -e "CREATE DATABASE IF NOT EXISTS realworld;" 2>/dev/null || echo "Database already exists or connection failed"
           # Remove old jar if exists
           rm -f /home/${{ secrets.VPS_USER }}/app/realworld-app.jar
           # Rename the uploaded jar to a standard name (excluding the plain jar)
