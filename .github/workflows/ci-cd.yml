@@ -28,7 +28,7 @@ jobs:
     - name: Run Tests
       run: ./gradlew test
 
-    # Deploy to VPS via SCP and SSH
+    # Deploy to VPS via SCP and SSH.
     - name: Setup Systemd Service
       uses: appleboy/scp-action@master
       with:
@@ -75,6 +75,7 @@ jobs:
         host: ${{ secrets.VPS_HOST }}
         username: ${{ secrets.VPS_USER }}
         key: ${{ secrets.VPS_SSH_KEY }}
+        command_timeout: 10m
         script: |
           # Install Java 17 if not present
           if ! command -v java &> /dev/null; then
@@ -87,7 +88,7 @@ jobs:
           # Install MySQL client if not present
           if ! command -v mysql &> /dev/null; then
             echo "MySQL client not found, installing..."
-            sudo apt install -y mysql-client
+            sudo DEBIAN_FRONTEND=noninteractive apt install -y mysql-client
           fi
           # Create database in RDS if it doesn't exist
           mysql -h ${{ secrets.DB_HOST }} -u ${{ secrets.DB_USER }} -p${{ secrets.DB_PASSWORD }} -e "CREATE DATABASE IF NOT EXISTS ${{ secrets.DB_NAME }};" 2>/dev/null || echo "Database already exists or connection failed"
