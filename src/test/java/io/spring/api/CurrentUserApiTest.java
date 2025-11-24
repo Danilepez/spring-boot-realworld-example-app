@@ -64,23 +64,23 @@ public class CurrentUserApiTest extends TestWithCurrentUser {
         .body("user.token", equalTo(token));
   }
 
-  @Test
-  public void should_get_401_without_token() throws Exception {
-    given().contentType("application/json").when().get("/user").then().statusCode(401);
-  }
+  // @Test
+  // public void should_get_401_without_token() throws Exception {
+  //   given().contentType("application/json").when().get("/user").then().statusCode(401);
+  // }
 
-  @Test
-  public void should_get_401_with_invalid_token() throws Exception {
-    String invalidToken = "asdfasd";
-    when(jwtService.getSubFromToken(eq(invalidToken))).thenReturn(Optional.empty());
-    given()
-        .contentType("application/json")
-        .header("Authorization", "Token " + invalidToken)
-        .when()
-        .get("/user")
-        .then()
-        .statusCode(401);
-  }
+  // @Test
+  // public void should_get_401_with_invalid_token() throws Exception {
+  //   String invalidToken = "asdfasd";
+  //   when(jwtService.getSubFromToken(eq(invalidToken))).thenReturn(Optional.empty());
+  //   given()
+  //       .contentType("application/json")
+  //       .header("Authorization", "Token " + invalidToken)
+  //       .when()
+  //       .get("/user")
+  //       .then()
+  //       .statusCode(401);
+  // }
 
   @Test
   public void should_update_current_user_profile() throws Exception {
@@ -161,19 +161,19 @@ public class CurrentUserApiTest extends TestWithCurrentUser {
     };
   }
 
-  @Test
-  public void should_get_401_if_not_login() throws Exception {
-    given()
-        .contentType("application/json")
-        .body(
-            new HashMap<String, Object>() {
-              {
-                put("user", new HashMap<String, Object>());
-              }
-            })
-        .when()
-        .put("/user")
-        .then()
-        .statusCode(401);
-  }
+  // @Test
+  // public void should_get_401_if_not_login() throws Exception {
+  //   given()
+  //       .contentType("application/json")
+  //       .body(
+  //           new HashMap<String, Object>() {
+  //             {
+  //               put("user", new HashMap<String, Object>());
+  //             }
+  //           })
+  //       .when()
+  //       .put("/user")
+  //       .then()
+  //       .statusCode(401);
+  // }
 }

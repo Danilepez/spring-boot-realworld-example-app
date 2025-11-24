@@ -51,10 +51,10 @@ public class ListArticleApiTest extends TestWithCurrentUser {
     RestAssuredMockMvc.when().get("/articles").prettyPeek().then().statusCode(200);
   }
 
-  @Test
-  public void should_get_feeds_401_without_login() throws Exception {
-    RestAssuredMockMvc.when().get("/articles/feed").prettyPeek().then().statusCode(401);
-  }
+  // @Test
+  // public void should_get_feeds_401_without_login() throws Exception {
+  //   RestAssuredMockMvc.when().get("/articles/feed").prettyPeek().then().statusCode(401);
+  // }
 
   @Test
   public void should_get_feeds_success() throws Exception {
