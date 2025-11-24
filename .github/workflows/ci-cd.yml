@@ -28,7 +28,7 @@ jobs:
     - name: Run Tests
       run: ./gradlew test
 
-    # Deploy to VPS via SCP and SSH.
+    # Deploy to VPS via SCP and SSH
     - name: Setup Systemd Service
       uses: appleboy/scp-action@master
       with:
